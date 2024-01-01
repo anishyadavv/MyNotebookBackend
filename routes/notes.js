@@ -1,7 +1,8 @@
 const express = require("express");
-const { find } = require("../models/user");
+const { find, findByIdAndUpdate } = require("../models/user");
 const fetchuser = require("../middleware/fecthuser");
 const Notes = require("../models/notes");
+const { reconstructFieldPath } = require("express-validator/src/field-selection");
 const router = express.Router();
 
 router.get("/fetchAllnotes", fetchuser, async (req, res) => {
@@ -97,5 +98,45 @@ router.delete("/deletenote/:id",fetchuser, async (req, res) => {
     res.status(500).send("some error occured");
   }
 });
+// pin notes
+router.put("/pin/:id",fetchuser, async (req,res)=>{
 
+    try{
+      let note = await Notes.findById(req.params.id);
+      if(!note){
+        return res.status(404).send("Not found");
+      }
+      if (note.user.toString() !== req.user.id) {
+        return res.status(401).send("not allowed");
+      }
+
+      note  = await Notes.findByIdAndUpdate(req.params.id,{pinned:true});
+      res.json("successfully pinned the note");
+    }
+    catch(error){
+      console.log(error.message);
+      res.status(500).send("some error occured");
+    }
+});
+
+// unpin notes
+router.put("/unpin/:id",fetchuser, async (req,res)=>{
+
+    try{
+      let note = await Notes.findById(req.params.id);
+      if(!note){
+        return res.status(404).send("Not found");
+      }
+      if (note.user.toString() !== req.user.id) {
+        return res.status(401).send("not allowed");
+      }
+
+      note  = await Notes.findByIdAndUpdate(req.params.id,{pinned:false});
+      res.json("successfully unpinned the note");
+    }
+    catch(error){
+      console.log(error.message);
+      res.status(500).send("some error occured");
+    }
+});
 module.exports = router;
