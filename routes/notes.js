@@ -112,10 +112,11 @@ router.put("/pin/:id",fetchuser, async (req,res)=>{
 
       note  = await Notes.findByIdAndUpdate(req.params.id,{pinned:true});
       res.json("successfully pinned the note");
+
     }
     catch(error){
       console.log(error.message);
-      res.status(500).send("some error occured");
+      res.status(500).json({ success: "false", message: "some error occured" });
     }
 });
 
@@ -136,7 +137,7 @@ router.put("/unpin/:id",fetchuser, async (req,res)=>{
     }
     catch(error){
       console.log(error.message);
-      res.status(500).send("some error occured");
+      res.status(500).json({ success: "false", message: "some error occured" });
     }
 });
 module.exports = router;
