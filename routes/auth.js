@@ -47,7 +47,6 @@ router.post('/login', async (req,res)=>{
         if(!user){
             return res.json({success,error:"Please enter valid credintials"});
         }
-        
         const passwordCompare = await bcrypt.compare(password, user.password);
         if(!passwordCompare){
             return res.json({success,error: "Please enter valid credintials"});

@@ -1,8 +1,6 @@
 const express = require("express");
-const { find, findByIdAndUpdate } = require("../models/user");
 const fetchuser = require("../middleware/fecthuser");
 const Notes = require("../models/notes");
-const { reconstructFieldPath } = require("express-validator/src/field-selection");
 const router = express.Router();
 
 router.get("/fetchAllnotes", fetchuser, async (req, res) => {
